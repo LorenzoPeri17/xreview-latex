@@ -1,26 +1,47 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{xreview}[2024/08/27 Reviewing LaTeX documents made easy]
+\ProvidesPackage{xreview}[2024/08/29 Reviewing LaTeX documents made easy]
 
 \RequirePackage{xcolor}
 \RequirePackage[normalem]{ulem}
 \RequirePackage{etoolbox}
 \RequirePackage{environ}
 \RequirePackage{letltxmacro}
+\RequirePackage{todonotes}
+\RequirePackage{soul}
+\RequirePackage{pifont}
+\RequirePackage{xparse}
+
+%%%% Necessary for comments to work in twocolumn-type documents
+\setlength{\marginparwidth}{2cm}
 
 %%%% Equation numbering
 \newcounter{removedeqcounter}
 \setcounter{removedeqcounter}{0}
 
-%%%% Define colours and removed equation prefix
+%%%% Comment numbering
+\newcounter{commentcounter}
+\setcounter{commentcounter}{0}
+
+%%%% Define colours and prefixes
 \newcommand{\addedcolor}{blue}
 \newcommand{\removedcolor}{red}
 \newcommand{\removedeqprefix}{R}
+\newcommand{\commentcolor}{yellow}
+\newcommand{\resolvedcommentcolor}{green}
+\newcommand{\commentprefix}{C}
 
 %%%% Reviewing commands
 \newtoggle{annotated}
+\toggletrue{annotated} % Show changes by default
 
 \newcommand{\showchanges}{\toggletrue{annotated}}
 \newcommand{\showclean}{\togglefalse{annotated}}
+
+\newtoggle{commented}
+\toggletrue{commented} % Show comments by default
+
+\newcommand{\showcomments}{\toggletrue{commented}}
+\newcommand{\hidecomments}{\togglefalse{commented}}
 
 %%%% Text coloring and hiding
 \newcommand{\colortext}[2]{{\leavevmode\color{#1}{#2}}}
@@ -57,6 +78,16 @@
 \safesout{\BODY}%
 \end{equation*}}}
 
+\NewEnviron{addequation}{%
+\begin{equation}%
+\added{\BODY}%
+\end{equation}}
+
+\NewEnviron{addequation*}{%
+\begin{equation*}%
+\added{\BODY}%
+\end{equation*}}
+
 \newcommand{\removedeqline}[1]{\hidefromclean{%
 \let\oldnonumber\nonumber%
 \renewcommand{\nonumber}{\global\tag@false\addtocounter{removedeqcounter}{-1}}%
@@ -70,5 +101,34 @@
 \makeatother
 \remlabel%
 \color{\removedcolor}%
+\makeatletter\let\default@color\current@color\makeatother%
 \safesout{#1}%
 }}
+
+\newcommand{\addedeqline}[1]{%
+\iftoggle{annotated}{\color{\addedcolor}{#1}}%
+{{#1}}%
+}
+
+\newcommand{\remaligntab}{\hidefromclean{&}}
+\newcommand{\remnewline}{\hidefromclean{\\}}
+
+%%%% Commenting
+\DeclareRobustCommand{\resolvedhl}[1]{{\sethlcolor{green}\hl{#1}}}
+
+\newcommand{\comment}[3][]{%
+\stepcounter{commentcounter}%
+\ifboolexpr{togl{annotated} and togl{commented}}{%
+\hl{#2}\todo[prepend, color=\commentcolor ,caption=\textbf{\commentprefix\arabic{commentcounter}}, linecolor=black, #1]{#3}}%
+{#2}}
+
+\newcommand{\resolvedcomment}[3][]{%
+\stepcounter{commentcounter}%
+\ifboolexpr{togl{annotated} and togl{commented}}{%
+\resolvedhl{#2}\todo[prepend, color=\resolvedcommentcolor ,caption=\textbf{\ding{52} \commentprefix\arabic{commentcounter}}, linecolor=black, #1]{#3}}%
+{#2}}
+
+\NewDocumentCommand{\authoredcomments}{O{} O{} m}{%
+  \expandafter\newcommand\csname #3comment\endcsname{\comment[author=#3, #1]}%
+  \expandafter\newcommand\csname resolved#3comment\endcsname{\resolvedcomment[author=#3, #2]}%
+}

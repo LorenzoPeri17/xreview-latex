@@ -1,0 +1,593 @@
+\documentclass[a4paper]{ltxdoc}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{parskip}
+\usepackage{bold-extra}
+\usepackage{cite}
+\usepackage{filecontents}
+
+
+\usepackage{xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\begin{filecontents}{bibliography.bib}
+    @book{texbook,
+  author = {Donald E. Knuth},
+  year = {1986},
+  title = {The {\TeX} Book},
+  publisher = {Addison-Wesley Professional}
+}
+@book{latex2e,
+  author = {Leslie Lamport},
+  year = {1994},
+  title = {{\LaTeX}: a Document Preparation System},
+  publisher = {Addison Wesley},
+  address = {Massachusetts},
+  edition = {2}
+}
+\end{filecontents}
+
+\title{\textbf{xreview}: \\ \Large{Reviewing
+\LaTeX~documents made easy}}
+
+\author{Lorenzo Peri\\\textcolor{blue}{\href{mailto:lp586@cam.ac.uk}{lp586@cam.ac.uk}}}
+\date{\today, v-1.0}
+
+% \lstset{
+% 		keywordstyle=\bfseries\color{black},
+% 		commentstyle=\itshape\color{green!40!black},
+% 		stringstyle=\itshape,
+% 		showstringspaces=false,
+% 		escapeinside={\%*}{*)},
+% 		columns=flexible,
+% 		breaklines=true,
+% 		breakindent=0pt}
+
+\hypersetup{
+		pdftitle={xreview},
+		pdfauthor={Lorenzo Peri},
+        urlcolor=cyan,
+}
+
+\changes{v1.0}{2024/08/27}{First version}
+
+\showchanges
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    \textit{xreview} is an attempt to make the painful process of reviewing a \LaTeX~document easy, or, at least, \textit{a little} less painful.
+\end{abstract}
+
+\tableofcontents
+
+\section{Getting Started}
+
+Have you ever had to make modifications to a manuscript while needing to keep track of the changes? Have you ever been asked by a journal to provide a revised version highlighting the changes \textit{and} a clean version? Is your brain utterly incapable of reasoning about a sentence while it's wrapped in dashes and distracting colors?
+Now you can \texttt{\textbf{{$\backslash$usepackage}}\{xreview\}} to make your life \textit{a little} less miserable.
+
+\subsection{The basics}
+
+\textit{xreview} allows you to quickly show and hide changes to a document.
+This is achieved providing two commands:
+\begin{itemize}
+    \item \writecommand{showchanges} to annotate the changes;
+    \item \writecommand{showclean} to compile a clean document.
+\end{itemize}
+
+Changes can be annotated mostly using the commands:
+\begin{itemize}
+    \item \writecommand{removed} for \removed{removed sections}
+    \item \writecommand{added} for \added{added sections}
+    \item \writecommand{changed} for sections that have been \changed{changed}{modified}
+\end{itemize}
+
+Sounds great, right? Here is a simple example of the package in use!
+
+\begin{center}
+\begin{minipage}[t]{0.3\linewidth}
+\textbf{\LaTeX Code}
+
+\writecommand{textit} \writearg{xreview} is a \writecommand{removed} \writearg{fantastic} package to help \writecommand{added} \writearg{\writecommand{LaTex}} authors review their manuscripts to respond to the \writecommand{changed}\writearg{annoying} \writearg{valuable} modifications suggested by referees.
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\linewidth}
+\writecommand{showchanges}
+\showchanges
+
+\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\linewidth}   
+\writecommand{showclean}
+\showclean
+
+\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+\end{minipage}
+\end{center}
+\showchanges
+
+If you look at the source code of this document, you will see that you can toggle \writecommand{showchanges} and \writecommand{showclean} to only show/hide changes in a certain section!
+
+\subsection{Dealing with equations}
+
+The author of this package is a \changed{nerd}{physicist}, so they know full well the pain of needing to review mathematical papers with equations. 
+Therefore, \textit{xcite} has first class support for math mode and the more common math environments. 
+
+\subsubsection{Inline math}
+
+Inline math (defined within \$ symbols) can be safely used within \writecommand{removed}, \writecommand{added}, and \writecommand{changed}. For example \removed{$\tau$ is superior to $\pi$} is a statement that \textit{should} be \writecommand{removed}.
+
+\subsubsection{\writeenv{remequation} and \writeenv{remequation*} environments}
+
+Dealing with annotating equations is weird and generally quite annoying.
+\textit{xcite} attempts to smooth the process as much as possible by providing the \writeenv{remequation} and \writeenv{remequation*} environments.
+Those markup an equation as if it was \writecommand{removed} while also dealing with numbering correctly, so that \textbf{equation number will not change between the annotated and clean versions}.
+
+To simply mark an equation that must be removed, \writeenv{remequation*} can be used as such.
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad a+b = c\newline
+    \writecommand{end}\writearg{equation}\newline
+    while this is removed.\newline
+    \writecommand{begin}\writearg{remequation*}
+
+    ~\quad a+b = d\newline
+    \writecommand{end}\writearg{remequation*}\newline
+    See?
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}\addtocounter{equation}{-1}
+    while this is removed.
+    \begin{remequation*}
+        a+b = d
+    \end{remequation*}
+    See?
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}\addtocounter{equation}{-1}
+    while this is removed.
+    \begin{remequation*}
+        a+b = d
+    \end{remequation*}
+    See?
+
+\end{minipage}
+\end{center}
+\showchanges
+
+Sometimes, however, it is useful to be able to reference an equation that is marked to be removed. This may happen because either some text referenced it, or to carry out a discussion around it (i.e. why it was removed).
+To facilitate this, \textit{xreview} provides the \writeenv{remequation} environment, which \textbf{introduces a separate numbering scheme for removed equations}. 
+The prefix for this separate numbering is normally a capital `R'. However, this can be customized to one's preference (see Section~\ref{sec:custom}).
+Here's an example
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad a+b = c\newline
+    \writecommand{end}\writearg{equation}\newline
+    while this is removed and labelled\newline
+    \writecommand{begin}\writearg{remequation}
+
+    ~\quad a+b = d\newline
+    \writecommand{end}\writearg{remequation}\newline
+    without altering the normal equation numbering.\newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad b+c = d\newline
+    \writecommand{end}\writearg{equation}\newline
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    while this is removed and labelled
+    \begin{remequation}
+        a+b = d
+        \label{eq:remeq_example}
+    \end{remequation}\addtocounter{removedeqcounter}{-1}
+    without altering the normal equation numbering.
+    \begin{equation}
+        b+c = d
+    \end{equation}\addtocounter{equation}{-2}
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    while this is removed and labelled
+    \begin{remequation}
+        a+b = d
+    \end{remequation}
+    without altering the normal equation numbering.
+    \begin{equation}
+        b+c = d
+    \end{equation}\addtocounter{equation}{-2}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+The \writeenv{remequation} environment is compatible with the standard \writecommand{ref} or \writecommand{eqref} commands. For example, I can now reference equation \ref{eq:remeq_example} from the example.
+
+Similarly, \textit{xreview} provides \writeenv{addequation} and \writeenv{addequation*} to mark an equation as added. \textbf{Added equations follow the same numbering as regular equations, and they are indistinguishable in the clean version}. Here is an example:
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad a+b = c\newline
+    \writecommand{end}\writearg{equation}\newline
+    and this is colored.\newline
+    \writecommand{begin}\writearg{addequation}
+
+    ~\quad a+b = d\newline
+    \writecommand{end}\writearg{addequation}\newline
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    and this is colored.
+    \begin{addequation}
+        a+b = d
+    \end{addequation}\addtocounter{equation}{-2}
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    while this is colored.
+    \begin{addequation}
+        a+b = d
+    \end{addequation}\addtocounter{equation}{-2}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+Should one wish to, \writeenv{remequation*} may be replicated with \writeenv{remequation} by using the \writecommand{nonumber} or \writecommand{notag} commands hiding the tag and not incrementing the removed equation counter.  The same goes for \writeenv{addequation}.
+
+\subsubsection{\writecommand{removedeqline} and \texttt{align}-like environments}
+
+Sometimes, some \textit{tragical} times, one must edit one equation defined within a series of equations (i.e. in an \texttt{align} environment).
+While \writecommand{removed}, \writecommand{added}, and \writecommand{changed} work just fine to modify the text, the equation ordering may be compromised.
+
+Even within \textit{xreview} this is \textit{slightly} awkward and generally not recommended. However, we do provide functionality to do so in the most ergonomic way possible. This is achieved by providing the commands:
+\begin{itemize}
+    \item \writecommand{removedeqline} that turns an \writeenv{equation} line into a \writeenv{remequation};
+    \item \writecommand{addedeqline} that typesets the line as if it was \writecommand{added};
+    \item \writecommand{remaligntab} and \writecommand{remnewline} to help with alignment and typesetting of the clean version.
+\end{itemize}
+
+The simplest example reads:
+
+\begin{center}
+    \begin{minipage}[t]{0.34\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{align}
+
+    \& a+b = c \textbackslash\textbackslash
+
+    \writecommand{remaligntab} \writecommand{removedeqline}\writearg{a+b=d} \writecommand{remnewline}
+
+    \& \writecommand{addedeqline}\writearg{b+c=d}\newline
+    \writecommand{end}\writearg{align}\newline
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    \begin{align}
+    a+b =c \\
+    \removedeqline{a+c=d} \remnewline
+    \addedeqline{b+c = d}
+    \end{align}\addtocounter{equation}{-2}\addtocounter{removedeqcounter}{-1}
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    \begin{align}
+        a+b =c \\
+        \removedeqline{a+c=d} \remnewline
+        \addedeqline{b+c = d}
+    \end{align}\addtocounter{equation}{-2}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+The only caveat is that \textbf{\& be replaced with \writecommand{remaligntab} and \textbackslash\textbackslash be replaced with \writecommand{remnewline} on \writecommand{removedeqline} lines}.
+However, problems arise if the alignment tab \& is desired \textit{inside} \writecommand{removedeqline} or \writecommand{addedeqline}. In this case, we run into trouble because commands cannot easily cross an alignment point. Thus, we must write \textbf{two} commands:
+\begin{itemize}
+    \item \writecommand{remnewline}\writearg{\textit{before tab}} \writecommand{remaligntab} \writecommand{removed}\writearg{\textit{after tab}}; 
+    \item \writecommand{addedeqline}\writearg{\textit{before tab}} \& \writecommand{added}\writearg{\textit{after tab}}
+\end{itemize}
+
+
+\begin{center}
+    \begin{minipage}[t]{0.34\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{align}
+
+     a+b \&= c \textbackslash\textbackslash
+
+     \writecommand{removedeqline}\writearg{a+b} \writecommand{remaligntab} \writecommand{removed}\writearg{=d} \writecommand{remnewline}
+
+    \writecommand{addedeqline}\writearg{a+b} \& \writecommand{added}\writearg{=2d}\newline
+    \writecommand{end}\writearg{align}\newline
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    \begin{align}
+    a+b &=c \\
+    \removedeqline{c} \remaligntab \removed{=d} \remnewline
+    \addedeqline{c}  & \added{= 2d}
+    \end{align}\addtocounter{equation}{-2}\addtocounter{removedeqcounter}{-1}
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    \begin{align}
+        a+b &=c \\
+        \removedeqline{c} \remaligntab \removed{=d} \remnewline
+        \addedeqline{c}  & \added{= 2d}
+    \end{align}\addtocounter{equation}{-2}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+If it is desired to hide the \writecommand{removedeqline} tag, the commands \writecommand{nonumber} or \writecommand{notag} can be used \textbf{inside the \writecommand{removedeqline} command}.
+
+\subsection{Comments}
+
+Comments are a great way to communicate with various authors, to carry out a discussion directly on a shared document or to share ideas and questions together with the compiled manuscript.
+
+\textit{xreview} allows for the possibility to insert comments that out of the box work in one- or two-column documents. 
+
+\subsubsection{The \writecommand{comment} command}
+
+Cimple comments can be attached to a snippet of text and \textbf{are hidden on the clean version}. 
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+\writecommand{textit}\writearg{xreview} is \writecommand{comment}\writearg{the greatest \writecommand{TeX} package ever written!}\writearg{Have you heard of \writecommand{textit}\writearg{amsmath}?}
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+\textit{xreview} is \comment{the greatest \TeX~package ever written!}{Have you heard of \textit{amsmath}?}
+\end{quote}
+
+\writecommand{showclean}
+\showclean
+
+\begin{quote}
+\textit{xreview} is \comment{the greatest \TeX~package ever written!}{Have you heard of \textit{amsmath}?}
+\end{quote} \addtocounter{commentcounter}{-1}
+
+\showchanges
+
+\textbf{Every comment is numbered} for ease of reference, with a customizable prefix (a capital `C' by default, see Section~\ref{sec:custom}).
+
+Sometimes, it is desirable to share only the changes and hide the comments. For this scenario, \textit{xreview} provides a separate toggle:
+\begin{itemize}
+    \item \writecommand{showcomments} to show comments on the annotated document;
+    \item \writecommand{hidecomments} to hide comments \textbf{even if \writecommand{showchanges} is set}.
+\end{itemize}
+
+\writecommand{comment} takes as optional argument everything accepted by \writecommand{todo} in the \href{https://ctan.org/pkg/todonotes?lang=en}{todonotes package}. This can be used, for example, to override the default color.
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    This is a \writecommand{comment}[backgroundcolor=red]\writearg{red comment!}\writearg{It looks angry.}
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+This is a \comment[backgroundcolor=red]{red comment!}{It looks angry.}
+\end{quote}
+
+
+\subsubsection{\writecommand{resolvedcomment}: a useful pattern}
+
+Sometimes comments tend to stick around for \textit{a while}. However, this has the downside of hiding which have been resolved and which are still outstanding. 
+To avoid this anti-pattern, \textit{xreview} offers the command \writecommand{resolvedcomment} to mark a comment as resolved!
+Changing \writecommand{comment} to \writecommand{resolvedcomment} will make outstanding matters stand out atop a sea of calming satisfying green.
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    This is \writecommand{resolvedcomment}\writearg{easy}\writearg{Understood!} while this is \writecommand{comment}\writearg{hard}\writearg{Still unclear...}.
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+This is \resolvedcomment{easy}{Understood!} while this is \comment{hard}{Still unclear...}.
+\end{quote}
+
+\subsubsection{\writecommand{authoredcomments}: another useful pattern}
+
+It is most times helpful to know who wrote a comment. This is made easy by the \writecommand{authoredcomments} command. This is used as such 
+
+\begin{quote}
+    \writecommand{authoredcomments}[Optional: mods to \writecommand{comment}][Optional: mods to \writecommand{resolvedcomment}]{Authorname}
+\end{quote}
+\noindent
+and creates two commands \writecommand{Authornamecomment} and \writecommand{resolvedAuthornamecomment} which will mark the author and can easily be distinguished.
+Here is an example
+
+\begin{quote}
+    \writecommand{authoredcomments}[color=cyan]\writearg{Lorenzo}\newline
+    \writecommand{authoredcomments}[color=orange]\writearg{Alice}\newline
+
+    This is \writecommand{Alicecomment}\writearg{great}\writearg{Written by Alice.} while this \writecommand{Lorenzocomment}\writearg{less so}\writearg{Written by Lorenzo}.
+
+    This is an \writecommand{resolvedLorenzocomment}\writearg{old modification}\writearg{Found appropriate citation.} we discussed.
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+    \authoredcomments[color=cyan]{Lorenzo}
+    \authoredcomments[color=orange]{Alice}
+This is \Alicecomment{great}{Written by Alice.} while this \Lorenzocomment{less so}{Written by Lorenzo}.
+
+This is an \resolvedLorenzocomment{old modification}{Found appropriate citation.} we discussed.
+\end{quote}
+
+\section{Caveats, tips, and tricks}
+
+\textit{xreview} tries to smooth away all the rough edges of trying to dynamically(-ish) change \LaTeX. However, here are some common pitfalls and caveats that are worth pointing out.
+
+\subsection{Dealing with \writecommand{sout}}
+
+Certain commands in \LaTeX are more feisty than others. Among those, \writecommand{sout} must take the crown for the most useful command that does not like to cooperate with others. In particular, it does not like commands like \writecommand{cite}.
+\textit{xreview} tries to deal with this for you, so we can simply write \changed{\LaTeX \cite{latex2e} replaces \TeX \cite{texbook}}{\LaTeX \cite{latex2e} is a set of macros built atop \TeX \cite{texbook}}.
+
+However, if you recently added a \writecommand{removed} or \writecommand{changed} section and all of a sudden the document does not compile, try wrapping any \textit{suspicious} command in an \writecommand{mbox} (i.e. \writecommand{command}\writearg{\dots} $\rightarrow$ \writecommand{mbox}\{\writecommand{command}\writearg{\dots}\}) and see if this fixes it!
+
+\subsection{Being aware of whitespace}
+
+\textit{xreview} tries its best to ensure both the annotated and clean documents look fantastic. However, is is easy to introduce too much (or too little) whitespace to make either one look sloppy. The biggest culprit is usually having wrapped whitespace at either end of \writecommand{removed} (i.e. \writecommand{removed}\writearg{ \textit{words} }) or having whitespace at the end of \writecommand{removed} or a line.
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    This will merge\writecommand{removed}\writearg{ separate }words.
+    \writecommand{removed} \writearg{This is removed.}\textvisiblespace This sentence is far from the previous. 
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+    This will merge\removed{ separate }words.
+    \removed{This is removed.} This sentence is far from the previous. 
+\end{quote}
+
+\writecommand{showclean}
+\showclean
+
+\begin{quote}
+    This will merge\removed{ separate }words.
+    \removed{This is removed.} This sentence is far from the previous. 
+\end{quote}
+
+\showchanges
+
+This problem is exacerbated when dealing with equations or when a paragraph break is desired in one version but not the other. In that case the command \writecommand{hidefromclean} may be of great help.
+
+\section{Customization}
+\label{sec:custom}
+
+Most aesthetical aspects of \textit{xreview} are customizable. To do so, simply insert this line in the document preamble
+\begin{quote}
+    \writecommand{renewcommand}\{\writecommand{thecommand}\}\writearg{new options}
+\end{quote}
+
+The commands available to be redefined are:
+\begin{itemize}
+    \item \writecommand{addedcolor} [default: \textcolor{blue}{blue}]: the color of \writecommand{added} sections;
+    \item \writecommand{removedcolor} [default: \textcolor{red}{red}]: the color of \writecommand{removed} sections;
+    \item \writecommand{commentcolor} [default: \textcolor{yellow}{yellow}]: the background color of \writecommand{comment};
+    \item \writecommand{resolvedcommentcolor} [default: \textcolor{green}{green}]: the background color of \writecommand{resolvedcomment};
+    \item \writecommand{removedeqprefix} [default: R]: the prefix for the tag of removed equations;
+    \item \writecommand{commentprefix} [default: C]: the prefix comment captions.
+\end{itemize}
+
+
+\section{Installation}
+\label{sec:installation}
+
+
+\bibliographystyle{unsrt}
+\bibliography{bibliography.bib}
+
+\end{document}
