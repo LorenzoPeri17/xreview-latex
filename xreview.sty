@@ -1,0 +1,74 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{xreview}[2024/08/27 Reviewing LaTeX documents made easy]
+
+\RequirePackage{xcolor}
+\RequirePackage[normalem]{ulem}
+\RequirePackage{etoolbox}
+\RequirePackage{environ}
+\RequirePackage{letltxmacro}
+
+%%%% Equation numbering
+\newcounter{removedeqcounter}
+\setcounter{removedeqcounter}{0}
+
+%%%% Define colours and removed equation prefix
+\newcommand{\addedcolor}{blue}
+\newcommand{\removedcolor}{red}
+\newcommand{\removedeqprefix}{R}
+
+%%%% Reviewing commands
+\newtoggle{annotated}
+
+\newcommand{\showchanges}{\toggletrue{annotated}}
+\newcommand{\showclean}{\togglefalse{annotated}}
+
+%%%% Text coloring and hiding
+\newcommand{\colortext}[2]{{\leavevmode\color{#1}{#2}}}
+\newcommand{\safesout}[1]{\ifmmode\text{\sout{\ensuremath{#1}}}\else\sout{#1}\fi}
+\newcommand{\hidefromclean}[1]{\iftoggle{annotated}{#1}{}}
+
+\newcommand{\added}[1]{\iftoggle{annotated}{\colortext{\addedcolor}{#1}}{{#1}}}
+
+\newcommand{\removed}[1]{\hidefromclean{%
+\begingroup%
+\let\oldcite\cite%
+\renewcommand{\cite}[1]{\mbox{\oldcite{##1}}}%
+\colortext{\removedcolor}{\safesout{#1}}%
+\endgroup}}
+
+\newcommand{\changed}[2]{\removed{#1}\iftoggle{annotated}{ }{}\added{#2}}
+
+%%%% Equation coloring and hiding
+\NewEnviron{remequation}{\hidefromclean{%
+\addtocounter{equation}{-1}%
+\refstepcounter{removedeqcounter}%
+\renewcommand{\theequation}{\textcolor{\removedcolor}{\removedeqprefix\arabic{removedeqcounter}}}%
+\let\oldnonumber\nonumber%
+\renewcommand{\nonumber}{\addtocounter{equation}{1}\addtocounter{removedeqcounter}{-1}\oldnonumber}%
+\renewcommand{\notag}{\nonumber}%
+\begin{equation}%
+\color{\removedcolor}%
+\safesout{\BODY}%
+\end{equation}}}
+
+\NewEnviron{remequation*}{\hidefromclean{%
+\begin{equation*}%
+\color{\removedcolor}%
+\safesout{\BODY}%
+\end{equation*}}}
+
+\newcommand{\removedeqline}[1]{\hidefromclean{%
+\let\oldnonumber\nonumber%
+\renewcommand{\nonumber}{\global\tag@false\addtocounter{removedeqcounter}{-1}}%
+\renewcommand{\notag}{\nonumber}%
+\makeatletter%
+\newcommand{\remlabel}{%
+\refstepcounter{removedeqcounter}%
+\global\tag@true%
+\oldnonumber%
+\gdef\df@tag{\maketag@@@{\textcolor{\removedcolor}{(\removedeqprefix\arabic{removedeqcounter})}}\def\@currentlabel{\textcolor{\removedcolor}{\removedeqprefix\arabic{removedeqcounter}}}}}
+\makeatother
+\remlabel%
+\color{\removedcolor}%
+\safesout{#1}%
+}}
