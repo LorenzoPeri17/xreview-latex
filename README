@@ -23,6 +23,11 @@ This package provides a simple way to review LaTeX documents. It allows to higli
 
 This package also offers a way to include comments in the text, which can be toggled on and off. This is useful for adding notes to the text, or for leaving comments to other authors.
 
+AUTHOR
+======
+
+The package is maintained by Lorenzo Peri (https://github.com/LorenzoPeri17). The repository is available at https://github.com/LorenzoPeri17/xreview-latex.
+
 LICENSE
 =======
 

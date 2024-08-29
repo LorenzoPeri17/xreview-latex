@@ -147,9 +147,9 @@ $ tlmgr install xreview
 
 ### Manual Global Instal
 
-If you want to use *xreview* in multiple documents without needing to keep copy-pasting `xreview.sty`, you can install it globally for your TeX environment. 
+If you want to use *xreview* in multiple documents without needing to keep copy-pasting `xreview.sty`, you can install it globally for your TeX environment.
 
-This usually is just a matter of copying `xreview.ins` and `xreview.dtx` in the right places (usually `~/texmf/` or `/usr/share/texmf/` on Linux or `~/Library/texmf/` on Mac using MacTeX). Please refer to a more detailed guide (i.e. [here](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages)) if you are having any trouble.
+This usually is just a matter of copying `xreview.sty` in the right places (usually `~/texmf/` or `/usr/share/texmf/` on Linux or `~/Library/texmf/` on Mac using MacTeX). Please refer to a more detailed guide (i.e. [here](https://en.wikibooks.org/wiki/LaTeX/Installing_Extra_Packages)) if you are having any trouble.
 
 You can check if the global installation has worked in the terminal with
 
