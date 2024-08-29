@@ -3,7 +3,7 @@
 Have you ever had to make modifications to a manuscript while needing to keep track of the changes? Have you ever been asked by a journal to provide a revised version highlighting the changes *and* a clean version? Is your brain utterly incapable of reasoning about a sentence while it's wrapped in dashes and distracting colors?
 Now you can `\usepackage{xreview}` to make your life *a little* less miserable.
 
-> To know how you can start using *xreview*, check the Installation section at the end of this document!
+> To know how you can start using *xreview*, check the [installation](#installation) section at the end of this document!
 
 ## The basics
 
