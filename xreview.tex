@@ -36,16 +36,6 @@
 \author{Lorenzo Peri\\\textcolor{blue}{\href{mailto:lp586@cam.ac.uk}{lp586@cam.ac.uk}}}
 \date{\today, v-1.0}
 
-% \lstset{
-% 		keywordstyle=\bfseries\color{black},
-% 		commentstyle=\itshape\color{green!40!black},
-% 		stringstyle=\itshape,
-% 		showstringspaces=false,
-% 		escapeinside={\%*}{*)},
-% 		columns=flexible,
-% 		breaklines=true,
-% 		breakindent=0pt}
-
 \hypersetup{
 		pdftitle={xreview},
 		pdfauthor={Lorenzo Peri},
@@ -129,7 +119,7 @@ Inline math (defined within \$ symbols) can be safely used within \writecommand{
 
 Dealing with annotating equations is weird and generally quite annoying.
 \textit{xcite} attempts to smooth the process as much as possible by providing the \writeenv{remequation} and \writeenv{remequation*} environments.
-Those markup an equation as if it was \writecommand{removed} while also dealing with numbering correctly, so that \textbf{equation number will not change between the annotated and clean versions}.
+Those markup an equation as if it was \writecommand{removed} while also dealing with numbering correctly, so that \textbf{equation numbering will not change between the annotated and clean versions}.
 
 To simply mark an equation that must be removed, \writeenv{remequation*} can be used as such.
 
@@ -326,7 +316,7 @@ The simplest example reads:
     \begin{minipage}[t]{0.34\linewidth}
     \textbf{\LaTeX Code}
     
-    This equation is kept \newline
+
     \writecommand{begin}\writearg{align}
 
     \& a+b = c \textbackslash\textbackslash
@@ -424,7 +414,7 @@ Comments are a great way to communicate with various authors, to carry out a dis
 
 \subsubsection{The \writecommand{comment} command}
 
-Cimple comments can be attached to a snippet of text and \textbf{are hidden on the clean version}. 
+Simple comments can be attached to a snippet of text and \textbf{are hidden on the clean version}. 
 
 \textbf{\LaTeX Code}
 
@@ -500,7 +490,9 @@ It is most times helpful to know who wrote a comment. This is made easy by the \
 \end{quote}
 \noindent
 and creates two commands \writecommand{Authornamecomment} and \writecommand{resolvedAuthornamecomment} which will mark the author and can easily be distinguished.
-Here is an example
+Here is an example:
+
+\textbf{\LaTeX Code}
 
 \begin{quote}
     \writecommand{authoredcomments}[color=cyan]\writearg{Lorenzo}\newline
@@ -564,6 +556,16 @@ However, if you recently added a \writecommand{removed} or \writecommand{changed
 
 This problem is exacerbated when dealing with equations or when a paragraph break is desired in one version but not the other. In that case the command \writecommand{hidefromclean} may be of great help.
 
+\subsection{Comments are not wide enough}
+
+Comment width is optimized to look nice in two-colum documents. If you are writing a single-column manuscript (or would just prefer them to go a little closer to the page margin), you can use 
+\begin{quote}
+    \writecommand{setlength}\writearg{\writecommand{marginparwidth}}\writearg{\textit{desired width}}
+\end{quote}
+in the preamble \underline{\textbf{after}} \writecommand{usepackage}\writearg{xcite}.
+
+The default with is \texttt{2 cm}.
+
 \section{Customization}
 \label{sec:custom}
 
@@ -581,10 +583,6 @@ The commands available to be redefined are:
     \item \writecommand{removedeqprefix} [default: R]: the prefix for the tag of removed equations;
     \item \writecommand{commentprefix} [default: C]: the prefix comment captions.
 \end{itemize}
-
-
-\section{Installation}
-\label{sec:installation}
 
 
 \bibliographystyle{unsrt}

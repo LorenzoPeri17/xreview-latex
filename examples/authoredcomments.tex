@@ -1,0 +1,51 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Authored Comments}
+\date{}
+
+\setlength{\marginparwidth}{3 cm}
+
+\begin{document}
+
+\maketitle
+
+It is most times helpful to know who wrote a comment. This is made easy by the \writecommand{authoredcomments} command. This is used as such 
+
+\begin{quote}
+    \writecommand{authoredcomments}[Optional: mods to \writecommand{comment}][Optional: mods to \writecommand{resolvedcomment}]{Authorname}
+\end{quote}
+\noindent
+and creates two commands \writecommand{Authornamecomment} and \writecommand{resolvedAuthornamecomment} which will mark the author and can easily be distinguished.
+Here is an example:
+~\newline
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    \writecommand{authoredcomments}[color=cyan]\writearg{Lorenzo}\newline
+    \writecommand{authoredcomments}[color=orange]\writearg{Alice}\newline
+
+    This is \writecommand{Alicecomment}\writearg{great}\writearg{Written by Alice.} while this \writecommand{Lorenzocomment}\writearg{less so}\writearg{Written by Lorenzo}.
+
+    This is an \writecommand{resolvedLorenzocomment}\writearg{old modification}\writearg{Found appropriate citation.} we discussed.
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+    \authoredcomments[color=cyan]{Lorenzo}
+    \authoredcomments[color=orange]{Alice}
+This is \Alicecomment{great}{Written by Alice.} while this \Lorenzocomment{less so}{Written by Lorenzo}.
+
+This is an \resolvedLorenzocomment{old modification}{Found appropriate citation.} we discussed.
+\end{quote}
+
+\end{document}

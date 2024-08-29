@@ -1,0 +1,35 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Resolved Comments}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Sometimes comments tend to stick around for \textit{a while}. However, this has the downside of hiding which have been resolved and which are still outstanding. 
+To avoid this anti-pattern, \textit{xreview} offers the command \writecommand{resolvedcomment} to mark a comment as resolved!
+Changing \writecommand{comment} to \writecommand{resolvedcomment} will make outstanding matters stand out atop a sea of calming satisfying green.
+~\newline
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    This is \writecommand{resolvedcomment}\writearg{easy}\writearg{Understood!} while this is \writecommand{comment}\writearg{hard}\writearg{Still unclear...}.
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+This is \resolvedcomment{easy}{Understood!} while this is \comment{hard}{Still unclear...}.
+\end{quote}
+
+\end{document}

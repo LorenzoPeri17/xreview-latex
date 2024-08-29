@@ -1,0 +1,66 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Align}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+\textit{xreview} offers tools to deal with removing and adding lines within sets of equations (i.e. the \writeenv{align} environment). 
+
+This can be done via the \writecommand{removedeqline} and `\writecommand{addedeqline} commands, which behave like \writeenv{remequation}  and \writeenv{addequation}.
+
+\begin{center}
+    \begin{minipage}[t]{0.34\linewidth}
+    \textbf{\LaTeX Code}
+    
+    \writecommand{begin}\writearg{align}
+
+    \& a+b = c \textbackslash\textbackslash
+
+    \writecommand{remaligntab} \writecommand{removedeqline}\writearg{a+b=d} \writecommand{remnewline}
+
+    \& \writecommand{addedeqline}\writearg{b+c=d}\newline
+    \writecommand{end}\writearg{align}\newline
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    \begin{align}
+    a+b =c \\
+    \removedeqline{a+c=d} \remnewline
+    \addedeqline{b+c = d}
+    \end{align}\addtocounter{equation}{-2}\addtocounter{removedeqcounter}{-1}
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    \begin{align}
+        a+b =c \\
+        \removedeqline{a+c=d} \remnewline
+        \addedeqline{b+c = d}
+    \end{align}\addtocounter{equation}{-2}
+
+\end{minipage}
+\end{center}
+
+To ensure proper formatting of both the clean and annotated documents \textbf{\& must be replaced with \writecommand{remaligntab} and \textbackslash\textbackslash must be replaced with \writecommand{remnewline} on \writecommand{removedeqline} lines}.
+
+The use of \writecommand{removedeqline} and \writecommand{addedeqline} with alignment tabs \textbf{within the line} (i.e. \texttt{a+b\&=c}) is somewhat delicate. Please refer to the full documentation in \texttt{xreview.pdf}
+
+\end{document}

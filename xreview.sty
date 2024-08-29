@@ -10,9 +10,7 @@
 \RequirePackage{soul}
 \RequirePackage{pifont}
 \RequirePackage{xparse}
-
-%%%% Necessary for comments to work in twocolumn-type documents
-\setlength{\marginparwidth}{2cm}
+\RequirePackage{amsmath}
 
 %%%% Equation numbering
 \newcounter{removedeqcounter}
@@ -29,6 +27,9 @@
 \newcommand{\commentcolor}{yellow}
 \newcommand{\resolvedcommentcolor}{green}
 \newcommand{\commentprefix}{C}
+
+%%%% Necessary for comments to work in twocolumn-type documents
+\setlength{\marginparwidth}{2cm}
 
 %%%% Reviewing commands
 \newtoggle{annotated}

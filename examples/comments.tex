@@ -1,0 +1,71 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+\usepackage{hyperref}
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Comments}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+Comments are a great way to communicate with various authors, to carry out a discussion directly on a shared document or to share ideas and questions together with the compiled manuscript.
+
+\textit{xreview} allows for the possibility to insert comments that out of the box work in one- or two-column documents. 
+
+Simple comments can be created with the \writecommand{comment} command. They highlight a snippet of text and \textbf{are hidden on the clean version}. 
+~\newline
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+\writecommand{textit}\writearg{xreview} is \writecommand{comment}\writearg{the greatest \writecommand{TeX} package ever written!}\writearg{Have you heard of \writecommand{textit}\writearg{amsmath}?}
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+\textit{xreview} is \comment{the greatest \TeX~package ever written!}{Have you heard of \textit{amsmath}?}
+\end{quote}
+
+\writecommand{showclean}
+\showclean
+
+\begin{quote}
+\textit{xreview} is \comment{the greatest \TeX~package ever written!}{Have you heard of \textit{amsmath}?}
+\end{quote} \addtocounter{commentcounter}{-1}
+
+\showchanges
+
+\textbf{Every comment is numbered} for ease of reference, with a customizable prefix (a capital `C' by default, see Section~\ref{sec:custom}).
+
+Sometimes, it is desirable to share only the changes and hide the comments. For this scenario, \textit{xreview} provides a separate toggle:
+\begin{itemize}
+    \item \writecommand{showcomments} to show comments on the annotated document;
+    \item \writecommand{hidecomments} to hide comments \textbf{even if \writecommand{showchanges} is set}.
+\end{itemize}
+
+\writecommand{comment} takes as optional argument everything accepted by \writecommand{todo} in the \href{https://ctan.org/pkg/todonotes?lang=en}{todonotes package}. This can be used, for example, to override the default color.
+~\newline
+
+\textbf{\LaTeX Code}
+
+\begin{quote}
+    This is a \writecommand{comment}[backgroundcolor=red]\writearg{red comment!}\writearg{It looks angry.}
+\end{quote}
+
+\writecommand{showchanges}
+\showchanges
+
+\begin{quote}
+This is a \comment[backgroundcolor=red]{red comment!}{It looks angry.}
+\end{quote}
+
+\end{document}

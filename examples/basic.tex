@@ -1,0 +1,61 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Basics}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\textit{xreview} allows you to quickly show and hide changes to a document.
+This is achieved providing two commands:
+\begin{itemize}
+    \item \writecommand{showchanges} to annotate the changes;
+    \item \writecommand{showclean} to compile a clean document.
+\end{itemize}
+
+Changes can be annotated mostly using the commands:
+\begin{itemize}
+    \item \writecommand{removed} for \removed{removed sections}
+    \item \writecommand{added} for \added{added sections}
+    \item \writecommand{changed} for sections that have been \changed{changed}{modified}
+\end{itemize}
+
+Here is a simple example of the package in use!
+
+\begin{center}
+\begin{minipage}[t]{0.3\linewidth}
+\textbf{\LaTeX Code}
+
+\writecommand{textit} \writearg{xreview} is a \writecommand{removed} \writearg{fantastic} package to help \writecommand{added} \writearg{\writecommand{LaTex}} authors review their manuscripts to respond to the \writecommand{changed}\writearg{annoying} \writearg{valuable} modifications suggested by referees.
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\linewidth}
+\writecommand{showchanges}
+\showchanges
+
+\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.3\linewidth}   
+\writecommand{showclean}
+\showclean
+
+\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+\end{minipage}
+\end{center}
+
+\showchanges
+
+If you look at the source code of this document, you will see that you can toggle \writecommand{showchanges} and \writecommand{showclean} to only show/hide changes in a certain section!
+
+\end{document}

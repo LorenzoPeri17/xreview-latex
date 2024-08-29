@@ -1,0 +1,111 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: Equations}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+To deal with removed and added equations, \textit{xreview} provides the \writeenv{remequation}, \writeenv{remequation*}, \writeenv{addequation}, \writeenv{addequation*} environments.
+
+\writeenv{remequation} and \writeenv{remequation*} typeset equations as if they were \writecommand{removed} and \textbf{are indistinguishible from \writeenv{equation} and \writeenv{equation*} in the clean version}.
+
+\writeenv{addequation} and \writeenv{addequation*} typeset equations as if they were \writecommand{added} and \textbf{hide them from the clean version}.
+
+\textit{xreview} also takes care of properly deal with equation numbering, to ensure that \textbf{equation numbering will not change between the annotated and clean versions}.
+
+\begin{itemize}
+    \item \writeenv{addequation*} and \writeenv{remequation*} do not number the equation;
+    \item \writeenv{addequation} follows on from regular equation numbering;
+    \item \writeenv{remequation} introduces \textbf{a separate numbering scheme} for removed equations that one still wishes to reference.
+\end{itemize}
+
+The prefix for removed equation numbering is normally a capital `R'. However, this can be customized to one's preference. These labels are fully compatible with referencing commands such as \writecommand{label}, \writecommand{ref}, and \writecommand{eqref}.
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    This equation is kept \newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad a+b=c\newline
+    \writecommand{end}\writearg{equation}\newline
+    while this is removed and labelled\newline
+    \writecommand{begin}\writearg{remequation}
+
+    ~\quad a+b = d\newline
+    \writecommand{label}\writearg{eq:remeq}\newline
+    \writecommand{end}\writearg{remequation}\newline
+    without altering the normal equation numbering.\newline
+    \writecommand{begin}\writearg{equation}
+
+    ~\quad b+c = d\newline
+    \writecommand{end}\writearg{equation}\newline
+    This is added instead
+    \writecommand{begin}\writearg{addequaiton}
+
+    ~\quad b = 3\newline
+    \writecommand{end}\writearg{addequation}\newline
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    while this is removed and labelled
+    \begin{remequation}
+        a+b = d
+        \label{eq:remeq}
+    \end{remequation}\addtocounter{removedeqcounter}{-1}
+    without altering the normal equation numbering.
+    \begin{equation}
+        b+c = d
+    \end{equation}
+    This is added instead
+    \begin{addequation}
+        b=3
+    \end{addequation}\addtocounter{equation}{-3}
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    This equation is kept
+    \begin{equation}
+        a+b = c
+    \end{equation}
+    while this is removed and labelled
+    \begin{remequation}
+        a+b = d
+    \end{remequation}\addtocounter{removedeqcounter}{-1}without altering the normal equation numbering.
+    \begin{equation}
+        b+c = d
+    \end{equation}
+    This is added instead
+    \begin{addequation}
+        b=3
+    \end{addequation}\addtocounter{equation}{-3}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+Now I can reference the removed Eq.~\eqref{eq:remeq} via \writecommand{eqref}\writearg{eq:remeq}.
+
+\end{document}
