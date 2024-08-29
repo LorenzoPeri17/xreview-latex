@@ -125,6 +125,8 @@ The default value is `2 cm`, which gives best results on two-column documents
 
 Installing a latex package is probably a little more cumbersome than it should. Here are the quickest ways to get started with *xreview*!
 
+> To install *xreview* you are going to need the latest version of `xreview.sty`. You can download the latest stable version from [here](https://github.com/LorenzoPeri17/xreview-latex/releases).
+
 ### Installing for a single document
 
 If you plan on using *xreview* on a single document or in a simple directory, by far the simplest way is to download `xreview.sty` and copying it into the same directory of your `.tex` files.
