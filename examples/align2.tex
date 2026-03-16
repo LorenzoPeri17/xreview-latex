@@ -1,0 +1,81 @@
+\documentclass[10pt]{article}
+\usepackage{bold-extra} % for bold \texttt
+
+\usepackage{../xreview}
+
+\newcommand{\writecommand}[1]{\texttt{\textbf{{\textbackslash#1}}}}
+\newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
+\newcommand{\writearg}[1]{\{#1\}}
+
+\title{XReview: \writeenv{addalign} and \writeenv{remalign}}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+
+If removing or adding a whole \texttt{align} environment is desired, \textit{xreview} offers a the \writeenv{addalign} and \writeenv{remalign} environments (as well as \writeenv{addalign*} and \writeenv{remalign*}).
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    New equations:\newline
+    \writecommand{begin}\writearg{addalign}
+
+    ~\quad \& a+b = d\textbackslash\textbackslash
+
+    ~\quad \& b+c=3d\newline
+    \writecommand{end}\writearg{addalign}\newline
+    Removed equations:\newline
+    \writecommand{begin}\writearg{remalign}
+
+    ~\quad \& a+b = d\textbackslash\textbackslash
+
+    ~\quad \& b+c=3d\newline
+    \writecommand{end}\writearg{remalign}
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    New equations:
+    \begin{addalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{addalign}\addtocounter{equation}{-2}
+    Removed equations:
+    \begin{remalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign}
+    \makeatletter
+    \addtocounter{xreview@removedeqcounter}{-2}
+    \makeatother
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    New equations:
+    \begin{addalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{addalign}\addtocounter{equation}{-2}
+    Removed equations:
+    \begin{remalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign}
+
+\end{minipage}
+\end{center}
+
+While \writeenv{addalign} and \writeenv{addalign*} works almost indistinguishably from marking each line as a \writecommand{addedeqline}, this is quite clearly not the same for \writeenv{remalign}. The reason is simple: \textit{amsmath} does \textit{not} provide an easy way to \writecommand{sout} through alignment tabs and newlines. Therefore, we pull a simple trick to ``\textit{sout}'' diagonally across. Not \textit{as} pretty, but it is a drop-in replacement for a to-be-removed \writeenv{align}! If an author cares very much about every single line being \textit{beautifully} stricken-through, they unfortunately must use \writecommand{removedeqline} and friends explicitly. Because of these limitations, \writeenv{remalign} and \writeenv{remalign*} try to be as customizable as possible. Please refer to the full documentation in \texttt{xreview.pdf} for more details.
+
+\end{document}

@@ -5,6 +5,7 @@
 \usepackage{bold-extra}
 \usepackage{cite}
 \usepackage{filecontents}
+\usepackage{listings}
 
 
 \usepackage{xreview}
@@ -13,7 +14,7 @@
 \newcommand{\writeenv}[1]{\texttt{\textbf{{#1}}}}
 \newcommand{\writearg}[1]{\{#1\}}
 
-\begin{filecontents}{bibliography.bib}
+\begin{filecontents}[overwrite]{bibliography.bib}
     @book{texbook,
   author = {Donald E. Knuth},
   year = {1986},
@@ -33,8 +34,8 @@
 \title{\textbf{xreview}: \\ \Large{Reviewing
 \LaTeX~documents made easy}}
 
-\author{Lorenzo Peri\\\textcolor{blue}{\href{mailto:lp586@cam.ac.uk}{lp586@cam.ac.uk}}}
-\date{\today, v-1.0}
+\author{Lorenzo Peri\\\textcolor{blue}{\href{mailto:lp@lorenzoperi.com}{lp@lorenzoperi.com}}}
+\date{\today, v-2.0}
 
 \hypersetup{
 		pdftitle={xreview},
@@ -84,14 +85,14 @@ Sounds great, right? Here is a simple example of the package in use!
 \textbf{\LaTeX Code}
 
 \writecommand{textit} \writearg{xreview} is a \writecommand{removed} \writearg{fantastic} package to help \writecommand{added} \writearg{\writecommand{LaTex}} authors review their manuscripts to respond to the \writecommand{changed}\writearg{annoying} \writearg{valuable} modifications suggested by referees.
-
+ 
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.3\linewidth}
 \writecommand{showchanges}
 \showchanges
 
-\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+\textit{xreview} is a \removed{fantastic}\remspace package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
 
 \end{minipage}
 \hfill
@@ -99,7 +100,7 @@ Sounds great, right? Here is a simple example of the package in use!
 \writecommand{showclean}
 \showclean
 
-\textit{xreview} is a \removed{fantastic} package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
+\textit{xreview} is a \removed{fantastic}\remspace package to help \added{\LaTeX} authors review their manuscripts to respond to the \changed{annoying}{valuable} modifications suggested by referees.
 \end{minipage}
 \end{center}
 \showchanges
@@ -214,7 +215,10 @@ Here's an example
     \begin{remequation}
         a+b = d
         \label{eq:remeq_example}
-    \end{remequation}\addtocounter{removedeqcounter}{-1}
+    \end{remequation}
+    \makeatletter
+    \addtocounter{xreview@removedeqcounter}{-1}
+    \makeatother
     without altering the normal equation numbering.
     \begin{equation}
         b+c = d
@@ -287,7 +291,7 @@ Similarly, \textit{xreview} provides \writeenv{addequation} and \writeenv{addequ
     \begin{equation}
         a+b = c
     \end{equation}
-    while this is colored.
+    and this is colored.
     \begin{addequation}
         a+b = d
     \end{addequation}\addtocounter{equation}{-2}
@@ -336,7 +340,10 @@ The simplest example reads:
     a+b =c \\
     \removedeqline{a+c=d} \remnewline
     \addedeqline{b+c = d}
-    \end{align}\addtocounter{equation}{-2}\addtocounter{removedeqcounter}{-1}
+    \end{align}\addtocounter{equation}{-2}
+    \makeatletter
+    \addtocounter{xreview@removedeqcounter}{-1}
+    \makeatother
     
     \end{minipage}
     \hfill
@@ -384,9 +391,12 @@ However, problems arise if the alignment tab \& is desired \textit{inside} \writ
     
     \begin{align}
     a+b &=c \\
-    \removedeqline{c} \remaligntab \removed{=d} \remnewline
+    \removedeqline{a+b} \remaligntab \removed{=d} \remnewline
     \addedeqline{c}  & \added{= 2d}
-    \end{align}\addtocounter{equation}{-2}\addtocounter{removedeqcounter}{-1}
+    \end{align}\addtocounter{equation}{-2}
+    \makeatletter
+    \addtocounter{xreview@removedeqcounter}{-1}
+    \makeatother
     
     \end{minipage}
     \hfill
@@ -396,7 +406,7 @@ However, problems arise if the alignment tab \& is desired \textit{inside} \writ
     
     \begin{align}
         a+b &=c \\
-        \removedeqline{c} \remaligntab \removed{=d} \remnewline
+        \removedeqline{a+b} \remaligntab \removed{=d} \remnewline
         \addedeqline{c}  & \added{= 2d}
     \end{align}\addtocounter{equation}{-2}
 
@@ -405,6 +415,89 @@ However, problems arise if the alignment tab \& is desired \textit{inside} \writ
 \showchanges
 
 If it is desired to hide the \writecommand{removedeqline} tag, the commands \writecommand{nonumber} or \writecommand{notag} can be used \textbf{inside the \writecommand{removedeqline} command}.
+
+\subsubsection{\writeenv{addalign} and \writeenv{remalign} environments}
+
+If removing or adding a whole \texttt{align} environment is desired, \textit{xreview} offers a the \writeenv{addalign} and \writeenv{remalign} environments (as well as \writeenv{addalign*} and \writeenv{remalign*}).
+
+\begin{center}
+    \begin{minipage}[t]{0.3\linewidth}
+    \textbf{\LaTeX Code}
+    
+    These equations are added\newline
+    \writecommand{begin}\writearg{addalign}
+
+    ~\quad \& a+b = d\textbackslash\textbackslash
+
+    ~\quad \& b+c=3d\newline
+    \writecommand{end}\writearg{addalign}\newline
+    and these are removed\newline
+    \writecommand{begin}\writearg{remalign}
+
+    ~\quad \& a+b = d\textbackslash\textbackslash
+
+    ~\quad \& b+c=3d\newline
+    \writecommand{end}\writearg{remalign}\newline
+    while these unnumbered\newline
+    \writecommand{begin}\writearg{remalign*}
+
+    ~\quad \& a+b = d\textbackslash\textbackslash
+
+    ~\quad \& b+c=3d\newline
+    \writecommand{end}\writearg{remalign*}\newline
+    
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}
+    \writecommand{showchanges}
+    \showchanges
+    
+    These equations are added
+    \begin{addalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{addalign}\addtocounter{equation}{-2}
+    and these are removed
+    \begin{remalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign}
+    \makeatletter
+    \addtocounter{xreview@removedeqcounter}{-2}
+    \makeatother
+    while these unnumbered
+    \begin{remalign*}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign*}
+
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\linewidth}   
+    \writecommand{showclean}
+    \showclean
+    
+    These equations are added
+    \begin{addalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{addalign}\addtocounter{equation}{-2}
+    and these are removed
+    \begin{remalign}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign}
+    while these unnumbered
+    \begin{remalign*}
+        & a+b = d \\
+        & b+c=3d
+    \end{remalign*}
+
+\end{minipage}
+\end{center}
+\showchanges
+
+While \writeenv{addalign} and \writeenv{addalign*} works almost indistinguishably from marking each line as a \writecommand{addedeqline}, this is quite clearly not the same for \writeenv{remalign}. The reason is simple: \textit{amsmath} does \textit{not} provide an easy way to \writecommand{sout} through alignment tabs and newlines. Therefore, we pull a simple trick to ``\textit{sout}'' diagonally across. Not \textit{as} pretty, but it is a drop-in replacement for a to-be-removed \writeenv{align}! If an author cares very much about every single line being \textit{beautifully} stricken-through, they unfortunately must use \writecommand{removedeqline} and friends explicitly. Because of these limitations, \writeenv{remalign} and \writeenv{remalign*} try to be as customizable as possible. See Section~\ref{sec:remalign-custom} for more details.
 
 \subsection{Comments}
 
@@ -554,7 +647,9 @@ However, if you recently added a \writecommand{removed} or \writecommand{changed
 
 \showchanges
 
-This problem is exacerbated when dealing with equations or when a paragraph break is desired in one version but not the other. In that case the command \writecommand{hidefromclean} may be of great help.
+This problem is exacerbated when dealing with equations or when a paragraph break is desired in one version but not the other. 
+To help with most situations, \textit{xreview} provides the \writecommand{remspace} command and its non--breaking sibling \writecommand{remnbsp}.
+For more complex situations, \writecommand{hidefromclean} will be of great help.
 
 \subsection{Comments are not wide enough}
 
@@ -584,6 +679,41 @@ The commands available to be redefined are:
     \item \writecommand{commentprefix} [default: C]: the prefix comment captions.
 \end{itemize}
 
+\subsection{Customizing \writeenv{remalign} and \writeenv{remalign*}}
+\label{sec:remalign-custom}
+
+There are also a few commands that enable users to customize the look of \writeenv{remalign} and \writeenv{remalign*}:
+\begin{itemize}
+    \item \writecommand{remalignxleftshift} [default: \texttt{0.15}\writecommand{linewidth}];
+    \item \writecommand{remalignxrightshift} [default: \texttt{0.34}\writecommand{linewidth}];
+    \item \writecommand{remalignstarxshift} [default: \texttt{0.34}\writecommand{linewidth}];
+    \item \writecommand{remalignyshift} [default: \texttt{2ex}];
+    \item \writecommand{remalignstrikecolor} [default: \writecommand{removedcolor}];
+\end{itemize}
+
+The strike-through line in \writeenv{remalign} is drawn as a \writeenv{tikzpicture} call
+
+\begin{lstlisting}[language=TeX]
+\draw[color=\remalignstrikecolor, remalignstyle] 
+([xshift=\remalignxleftshift, yshift=-\remalignyshift]
+eqblock.north west) 
+-- 
+([xshift=-\remalignxrightshift, yshift=\remalignyshift]
+eqblock.south east);
+\end{lstlisting}
+
+while the \writeenv{remalign*} is drawn as
+
+\begin{lstlisting}[language=TeX]
+\draw[color=\remalignstrikecolor, remalignstyle] 
+([xshift=\remalignxleftshift, yshift=-\remalignyshift]
+eqblock.north west) 
+-- 
+([xshift=-\remalignxrightshift, yshift=\remalignyshift]
+eqblock.south east);
+\end{lstlisting}
+
+\texttt{remalignstyle} gives users complete \writeenv{tikz} control over the style. They are very welcome to give exact dimensions (\texttt{\writecommand{tikzset}\{remalignstyle/.style={line width=2.5pt}}\}) or multiple options (\texttt{\writecommand{tikzset}\{remalignstyle/.style={very thick, dashed}}\}), to their heart's content!
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography.bib}

@@ -1,6 +1,8 @@
 .vscode
 .DS_Store
 
+*.tar.gz
+
 *.aux
 *.fls
 *.log
@@ -12,3 +14,4 @@
 *.bib
 *.blg
 *.tdo
+*.hd

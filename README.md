@@ -55,6 +55,10 @@ To ensure proper formatting of both the clean and annotated version, please make
 
 > The use of `\removedeqline` and `\addedeqline` with alignment tabs **within the line** (i.e. `a+b&=c`) is somewhat delicate. Please refer to the full documentation in `xreview.pdf`
 
+If this sounds like too much work, the `addalign` and `remalign` (and their unnumbered siblings `addequation*` and `remalign*`) are here to help!
+
+![Example of dealing with added and removed aligns](Figures/align2.png)
+
 ## Comments
 
 Comments are a great way to communicate with various authors, to carry out a discussion directly on a shared document or to share ideas and questions together with the compiled manuscript.

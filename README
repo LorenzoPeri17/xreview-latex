@@ -12,14 +12,14 @@
 |                                                                       |
 |                  Reviewing LaTeX document made easy                   |
 |                                                                       |
-|                  by Lorenzo Peri - lp586@cam.ac.uk                    |
+|                 by Lorenzo Peri - lp@lorenzoperi.com                  |
 |                                                                       |
 +-----------------------------------------------------------------------+
 
 DESCRIPTION
 ===========
 
-This package provides a simple way to review LaTeX documents. It allows to higlight and/or hide changes to a document, and to add comments to the text. This will help you to keep track of the changes you make to a document, and to easily spot the changes made by others, while always having the option of toggling a clean version of the document.
+This package provides a simple way to review LaTeX documents. It allows to highlight and/or hide changes to a document, and to add comments to the text. This will help you to keep track of the changes you make to a document, and to easily spot the changes made by others, while always having the option of toggling a clean version of the document.
 
 This package also offers a way to include comments in the text, which can be toggled on and off. This is useful for adding notes to the text, or for leaving comments to other authors.
 

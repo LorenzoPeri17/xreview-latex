@@ -13,12 +13,15 @@
 \RequirePackage{amsmath}
 
 %%%% Equation numbering
-\newcounter{removedeqcounter}
-\setcounter{removedeqcounter}{0}
+\newcounter{xreview@removedeqcounter}
+\setcounter{xreview@removedeqcounter}{0}
 
 %%%% Comment numbering
 \newcounter{commentcounter}
 \setcounter{commentcounter}{0}
+
+%%%% Helper with dealing with align
+\newcounter{xreview@savedeq}
 
 %%%% Define colours and prefixes
 \newcommand{\addedcolor}{blue}
@@ -27,6 +30,19 @@
 \newcommand{\commentcolor}{yellow}
 \newcommand{\resolvedcommentcolor}{green}
 \newcommand{\commentprefix}{C}
+
+%%%% Define lengths for remalign strikethrough
+\newcommand{\remalignxleftshift}{0.15\linewidth}
+\newcommand{\remalignxrightshift}{0.34\linewidth}
+\newcommand{\remalignstarxshift}{0.25\linewidth}
+\newcommand{\remalignyshift}{2ex}
+\newcommand{\remalignstrikecolor}{\removedcolor}
+\tikzset{remalignstyle/.style={thin}}
+
+\newtoggle{remequationstrike}
+\toggletrue{remequationstrike} % Show changes by default
+\newcommand{\showremequationstrike}{\toggletrue{remequationstrike}}
+\newcommand{\hideremequationstrike}{\togglefalse{remequationstrike}}
 
 %%%% Necessary for comments to work in twocolumn-type documents
 \setlength{\marginparwidth}{2cm}
@@ -63,10 +79,10 @@
 %%%% Equation coloring and hiding
 \NewEnviron{remequation}{\hidefromclean{%
 \addtocounter{equation}{-1}%
-\refstepcounter{removedeqcounter}%
-\renewcommand{\theequation}{\textcolor{\removedcolor}{\removedeqprefix\arabic{removedeqcounter}}}%
+\refstepcounter{xreview@removedeqcounter}%
+\renewcommand{\theequation}{\textcolor{\removedcolor}{\removedeqprefix\arabic{xreview@removedeqcounter}}}%
 \let\oldnonumber\nonumber%
-\renewcommand{\nonumber}{\addtocounter{equation}{1}\addtocounter{removedeqcounter}{-1}\oldnonumber}%
+\renewcommand{\nonumber}{\addtocounter{equation}{1}\addtocounter{xreview@removedeqcounter}{-1}\oldnonumber}%
 \renewcommand{\notag}{\nonumber}%
 \begin{equation}%
 \color{\removedcolor}%
@@ -79,6 +95,53 @@
 \safesout{\BODY}%
 \end{equation*}}}
 
+\NewEnviron{remalign}{\hidefromclean{%
+\setcounter{xreview@savedeq}{\value{equation}}%
+\setcounter{equation}{\value{xreview@removedeqcounter}}%
+\renewcommand{\theequation}{\textcolor{\removedcolor}{\removedeqprefix\arabic{equation}}}%
+\par\vspace{\abovedisplayskip}\noindent
+\begin{tikzpicture}[baseline=(current bounding box.center)]%
+\node [inner sep=0pt, outer sep=0pt, text width=\linewidth] (eqblock) {%
+\begingroup%
+\setlength{\abovedisplayskip}{0pt}%
+\setlength{\belowdisplayskip}{0pt}%
+\setlength{\abovedisplayshortskip}{0pt}%
+\setlength{\belowdisplayshortskip}{0pt}%
+\color{\removedcolor}%
+\begin{align}%
+\BODY%
+\end{align}
+\endgroup%
+};%
+\iftoggle{remequationstrike}{
+\draw[color=\remalignstrikecolor, remalignstyle] ([xshift=\remalignxleftshift, yshift=-\remalignyshift]eqblock.north west) -- ([xshift=-\remalignxrightshift, yshift=\remalignyshift]eqblock.south east);%
+}{}%
+\end{tikzpicture}\par\vspace{\belowdisplayskip}%
+\setcounter{xreview@removedeqcounter}{\value{equation}}%
+\setcounter{equation}{\value{xreview@savedeq}}%
+}}
+
+\NewEnviron{remalign*}{\hidefromclean{%
+\par\vspace{\abovedisplayskip}\noindent
+\begin{tikzpicture}[baseline=(current bounding box.center)]
+\node [inner sep=0pt, outer sep=0pt, text width=\linewidth] (eqblock) {%
+\begingroup%
+\setlength{\abovedisplayskip}{0pt}%
+\setlength{\belowdisplayskip}{0pt}%
+\setlength{\abovedisplayshortskip}{0pt}%
+\setlength{\belowdisplayshortskip}{0pt}%
+\color{\removedcolor}%
+\begin{align*}%
+\BODY%
+\end{align*}
+\endgroup%
+};%
+\iftoggle{remequationstrike}{
+\draw[color=\remalignstrikecolor, remalignstyle] ([xshift=\remalignstarxshift, yshift=-\remalignyshift]eqblock.north west) -- ([xshift=-\remalignstarxshift, yshift=\remalignyshift]eqblock.south east);%
+}{}%
+\end{tikzpicture}\par\vspace{\belowdisplayskip}%
+}}
+
 \NewEnviron{addequation}{%
 \begin{equation}%
 \added{\BODY}%
@@ -89,16 +152,32 @@
 \added{\BODY}%
 \end{equation*}}
 
+\NewEnviron{addalign}{%
+\begingroup%
+\iftoggle{annotated}{\color{\addedcolor}}{}%
+\begin{align}%
+\BODY%
+\end{align}%
+\endgroup}
+
+\NewEnviron{addalign*}{%
+\begingroup%
+\iftoggle{annotated}{\color{\addedcolor}}{}%
+\begin{align*}%
+\BODY%
+\end{align*}%
+\endgroup}
+
 \newcommand{\removedeqline}[1]{\hidefromclean{%
 \let\oldnonumber\nonumber%
-\renewcommand{\nonumber}{\global\tag@false\addtocounter{removedeqcounter}{-1}}%
+\renewcommand{\nonumber}{\global\tag@false\addtocounter{xreview@removedeqcounter}{-1}}%
 \renewcommand{\notag}{\nonumber}%
 \makeatletter%
 \newcommand{\remlabel}{%
-\refstepcounter{removedeqcounter}%
+\refstepcounter{xreview@removedeqcounter}%
 \global\tag@true%
 \oldnonumber%
-\gdef\df@tag{\maketag@@@{\textcolor{\removedcolor}{(\removedeqprefix\arabic{removedeqcounter})}}\def\@currentlabel{\textcolor{\removedcolor}{\removedeqprefix\arabic{removedeqcounter}}}}}
+\gdef\df@tag{\maketag@@@{\textcolor{\removedcolor}{(\removedeqprefix\arabic{xreview@removedeqcounter})}}\def\@currentlabel{\textcolor{\removedcolor}{\removedeqprefix\arabic{xreview@removedeqcounter}}}}}
 \makeatother
 \remlabel%
 \color{\removedcolor}%
@@ -113,6 +192,8 @@
 
 \newcommand{\remaligntab}{\hidefromclean{&}}
 \newcommand{\remnewline}{\hidefromclean{\\}}
+\newcommand{\remspace}{\hidefromclean{ }}
+\newcommand{\remnbsp}{\hidefromclean{~}}
 
 %%%% Commenting
 \DeclareRobustCommand{\resolvedhl}[1]{{\sethlcolor{green}\hl{#1}}}
